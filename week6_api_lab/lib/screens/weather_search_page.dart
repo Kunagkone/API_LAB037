@@ -1,8 +1,8 @@
-import '../services/demo_post_service.dart';
 import 'package:flutter/material.dart';
 import '../models/weather.dart';
 import '../services/weather_service.dart';
-// 1. Import ไฟล์ที่สร้างขึ้นด้านบน
+import '../services/demo_post_service.dart'; // Import ฟังก์ชันทดลอง POST
+
 enum _ViewStatus { idle, loading, success, error }
 
 class WeatherSearchPage extends StatefulWidget {
@@ -33,7 +33,6 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
         _status = _ViewStatus.success;
       });
     } catch (e) {
-      // ✅ แก้ไขจุดที่ 1: เปลี่ยนสถานะเป็น error และเก็บข้อความแจ้งเตือนภาษาไทย
       setState(() {
         _status = _ViewStatus.error;
         _errorMessage = e.toString().replaceAll('Exception: ', '');
@@ -58,9 +57,22 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
               ),
             ),
             const SizedBox(height: 12),
+            
+            // ปุ่มค้นหาหลัก
             ElevatedButton(
               onPressed: _status == _ViewStatus.loading ? null : _search,
               child: const Text('ค้นหา'),
+            ),
+            const SizedBox(height: 8),
+
+            // 🔽 ใส่ปุ่มทดลอง POST (ขั้นตอนที่ 3.1) เพิ่มตรงนี้
+            ElevatedButton(
+              onPressed: () => createDemoPost(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber.shade100,
+                foregroundColor: Colors.black,
+              ),
+              child: const Text('ทดลอง POST (ขั้นตอนที่ 3.1)'),
             ),
             const SizedBox(height: 16),
             
@@ -78,7 +90,7 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
               Text(_weather!.description),
             ],
 
-            // ✅ แก้ไขจุดที่ 2: เพิ่ม UI สำหรับแสดงสถานะ Error ด้วยข้อความสีแดง
+            // สถานะ Error
             if (_status == _ViewStatus.error && _errorMessage != null)
               Container(
                 padding: const EdgeInsets.all(12),
