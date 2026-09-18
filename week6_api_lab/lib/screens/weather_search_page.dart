@@ -1,7 +1,8 @@
+import '../services/demo_post_service.dart';
 import 'package:flutter/material.dart';
 import '../models/weather.dart';
 import '../services/weather_service.dart';
-
+// 1. Import ไฟล์ที่สร้างขึ้นด้านบน
 enum _ViewStatus { idle, loading, success, error }
 
 class WeatherSearchPage extends StatefulWidget {
