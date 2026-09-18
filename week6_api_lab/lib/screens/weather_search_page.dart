@@ -1,0 +1,99 @@
+import 'package:flutter/material.dart';
+import '../models/weather.dart';
+import '../services/weather_service.dart';
+
+enum _ViewStatus { idle, loading, success, error }
+
+class WeatherSearchPage extends StatefulWidget {
+  const WeatherSearchPage({super.key});
+
+  @override
+  State<WeatherSearchPage> createState() => _WeatherSearchPageState();
+}
+
+class _WeatherSearchPageState extends State<WeatherSearchPage> {
+  final _weatherService = WeatherService();
+  final _cityController = TextEditingController();
+
+  _ViewStatus _status = _ViewStatus.idle;
+  Weather? _weather;
+  String? _errorMessage;
+
+  Future<void> _search() async {
+    setState(() {
+      _status = _ViewStatus.loading;
+      _errorMessage = null;
+    });
+
+    try {
+      final weather = await _weatherService.fetchWeather(_cityController.text.trim());
+      setState(() {
+        _weather = weather;
+        _status = _ViewStatus.success;
+      });
+    } catch (e) {
+      // ✅ แก้ไขจุดที่ 1: เปลี่ยนสถานะเป็น error และเก็บข้อความแจ้งเตือนภาษาไทย
+      setState(() {
+        _status = _ViewStatus.error;
+        _errorMessage = e.toString().replaceAll('Exception: ', '');
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('ค้นหาสภาพอากาศ')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              controller: _cityController,
+              decoration: const InputDecoration(
+                labelText: 'ชื่อเมือง',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: _status == _ViewStatus.loading ? null : _search,
+              child: const Text('ค้นหา'),
+            ),
+            const SizedBox(height: 16),
+            
+            // สถานะกำลังโหลด
+            if (_status == _ViewStatus.loading)
+              const Center(child: CircularProgressIndicator()),
+              
+            // สถานะสำเร็จ
+            if (_status == _ViewStatus.success && _weather != null) ...[
+              Text(
+                '${_weather!.cityName}: ${_weather!.temperature}°C',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Text('รู้สึกเหมือน: ${_weather!.feelsLike}°C'),
+              Text(_weather!.description),
+            ],
+
+            // ✅ แก้ไขจุดที่ 2: เพิ่ม UI สำหรับแสดงสถานะ Error ด้วยข้อความสีแดง
+            if (_status == _ViewStatus.error && _errorMessage != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red, fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
