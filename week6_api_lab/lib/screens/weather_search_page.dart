@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/weather.dart';
 import '../services/weather_service.dart';
-import '../services/demo_post_service.dart'; // Import ฟังก์ชันทดลอง POST
+import '../services/demo_post_service.dart'; // นำเข้าทั้ง createDemoPost และ updateDemoPost
 
 enum _ViewStatus { idle, loading, success, error }
 
@@ -65,7 +65,7 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
             ),
             const SizedBox(height: 8),
 
-            // 🔽 ใส่ปุ่มทดลอง POST (ขั้นตอนที่ 3.1) เพิ่มตรงนี้
+            // ปุ่มทดลอง POST (ขั้นตอนที่ 3.1)
             ElevatedButton(
               onPressed: () => createDemoPost(),
               style: ElevatedButton.styleFrom(
@@ -73,6 +73,17 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
                 foregroundColor: Colors.black,
               ),
               child: const Text('ทดลอง POST (ขั้นตอนที่ 3.1)'),
+            ),
+            const SizedBox(height: 8),
+
+            // 🔽 ปุ่มทดลอง PUT (ขั้นตอนที่ 3.2) เพิ่มตรงนี้
+            ElevatedButton(
+              onPressed: () => updateDemoPost(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade100,
+                foregroundColor: Colors.black,
+              ),
+              child: const Text('ทดลอง PUT (ขั้นตอนที่ 3.2)'),
             ),
             const SizedBox(height: 16),
             
