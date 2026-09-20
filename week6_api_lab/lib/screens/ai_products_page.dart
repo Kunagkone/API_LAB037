@@ -115,7 +115,7 @@ class _AiProductsPageState extends State<AiProductsPage> {
                           Text(
                             product.title,
                             maxLines: 2,
-                            overflow: TextSpan.ellipsis,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 13,
