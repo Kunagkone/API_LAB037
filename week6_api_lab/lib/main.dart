@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/weather_search_page.dart';
+import 'screens/ai_products_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +10,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WeatherSearchPage(),
+      title: 'Fake Store API',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const AiProductsPage(),
     );
   }
 }
